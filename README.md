@@ -86,3 +86,46 @@ Data LRemove(List *plist) {
     return rdata;
 }
 ```
+
+## Stack
+- 배열로 stack 구현 : `topIndex`
+```c
+typedef int Data;
+
+typedef struct _arrayStack {
+    Data stackArr[STACK_LEN];
+    int topIndex;
+} ArrayStack;
+
+//init
+pstack -> topIndex = -1;
+//push
+pstack -> stackArr[++(pstack->topIndex)] = data;
+//peek
+pstack -> stackArr[pstack -> topIndex];
+//pop
+pstack -> stackArr[(pstack->topIndex)--];
+```
+- 리스트로 stack 구현 : `head`
+```c
+typedef struct _node {
+    Data data;
+    struct _node *next;
+} Node;
+
+//array의 topIdx == head
+typedef struct _listStack {
+    Node *head;
+} ListStack;
+
+//init
+pstack -> head = NULL;
+//push
+newNode -> next = pstack -> head;
+pstack -> head = newNode;
+//peek
+pstack -> head -> data;
+//pop
+rNode = pstack -> head;
+pstack -> head = pstack -> head -> next;
+```
