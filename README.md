@@ -217,3 +217,56 @@ Node *delNode = pdq->tail;
 pdq->tail = pdq->tail->prev;
 pdq->tail->next = NULL;
 ```
+
+## Tree
+- 리스트로 트리 구현하기
+```c
+typedef struct _bTreeNode {
+    Data data;
+    struct _bTreeNode *left;
+    struct _bTreeNode *right;
+} BTreeNode;
+
+void MakeLeftSubTree(BTreeNode *main, BTreeNode *sub) {
+
+    //기존에 서브트리가 있으면, 기존 서브트리 삭제
+    if(main->left != NULL)
+        free(main->left);
+    
+    //새로 만든 서브트리 넣어줌
+    main->left = sub;
+}
+```
+- 트리의 순회
+```c
+void InorderTraverse(BTreeNode *bt) {
+
+    if(bt==NULL)
+        return;
+
+    InorderTraverse(bt->left);
+    printf("%d ", bt->data);
+    InorderTraverse(bt->right);
+}
+
+void PreorderTraverse(BTreeNode *bt) {
+
+    if(bt==NULL)
+        return;
+
+    printf("%d ", bt->data);
+    PreorderTraverse(bt->left);
+    PreorderTraverse(bt->right);
+}
+
+void PostorderTraverse(BTreeNode *bt) {
+
+    if(bt==NULL)
+        return;
+
+    PostorderTraverse(bt->left);
+    PostorderTraverse(bt->right);
+    printf("%d ", bt->data);
+
+}
+```
