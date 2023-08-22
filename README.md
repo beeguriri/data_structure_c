@@ -154,3 +154,31 @@ pq -> rear = (pq -> rear + 1) % QUE_LEN;
 //출력은 front 포인트 증가
 pq -> front = (pq -> front + 1) % QUE_LEN;
 ```
+- 리스트로 queue 구현
+```c
+typedef struct _node {
+    Data data;
+    struct _node *next;
+} Node;
+
+typedef struct _lQueue {
+    Node *front;
+    Node *rear;
+} LQueue;
+
+void QueueInit(Queue *pq) {
+    pq->front = NULL;
+    pq->rear = NULL;
+}
+
+//enqueue
+pq->rear->next = newNode;
+pq->rear = newNode;
+
+//dequeue
+delNode = pq->front;
+pq->front = pq->front->next;
+
+//peek
+pq->front->data;
+```
