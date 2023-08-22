@@ -129,3 +129,28 @@ pstack -> head -> data;
 rNode = pstack -> head;
 pstack -> head = pstack -> head -> next;
 ```
+
+## Queue
+- 배열로 queue 구현 (원형큐)
+```c
+typedef struct _cQueue {
+    int front;
+    int rear;
+    Data queArr[QUE_LEN];
+} CQueue;
+
+//초기화 시 front, rear 모두 0을 가르킴
+void QueueInit(Queue *pq) {
+    pq -> front = 0;
+    pq -> rear = 0;
+}
+
+//배열 중 0번 index는 사용하지 않음 (포화 판단을 위해)
+pq -> front == pq -> rear //배열 비었음
+pq -> front == (pq -> rear + 1) % QUE_LEN //배열 가득참
+
+//입력은 rear 포인트 증가
+pq -> rear = (pq -> rear + 1) % QUE_LEN;
+//출력은 front 포인트 증가
+pq -> front = (pq -> front + 1) % QUE_LEN;
+```
