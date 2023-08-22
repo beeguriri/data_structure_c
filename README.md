@@ -270,3 +270,65 @@ void PostorderTraverse(BTreeNode *bt) {
 
 }
 ```
+
+## Heap (최소힙)
+- 완전이진트리로 구성
+- 최소힙 : 부모노드의 키값이 자식노드의 키값보다 크지않음
+- 자식노드 인덱스 i => 부모노드 인덱스 `i/2`
+- 부모노드 인덱스 i => 왼쪽자식 `i*2`, 오른쪽자식 `i*2+1`
+- 삽입은 제일 마지막 인덱스에 추가 후 아래에서부터 부모노드까지 우선순위 비교
+- 삭제는 제일 마지막 인덱스의 값을 부모노드에서부터 마지막노드까지 우선순위 비교
+```c
+typedef struct _heap {
+    PriorityComp *comp;
+    int numOfData;
+    Data heapArr[HEAP_LEN];
+} Heap;
+
+void Insert(Heap *ph, Data data){
+    
+    //제일 마지막에 데이터 추가 후
+    int idx = ph->numOfData+1;
+
+    while(idx!=1) {
+        //아래 -> 위로 올라가면서 data가 더 작으면(우선순위 높으면) 반복
+        if(ph->comp(data, ph->heapArr[GetParentIDX(idx)])>0) {
+
+            ph->heapArr[idx] = ph->heapArr[GetParentIDX(idx)];
+            idx = GetParentIDX(idx);
+        } 
+        else
+            break;
+    }
+    ph->heapArr[idx] = data;
+    (ph->numOfData)++;
+}
+
+Data Delete(Heap *ph) {
+
+    //루트노드 제거 후, 제일 마지막값을 루트노드에 배치하여 
+    //위 -> 아래로 내려가면서 data가 크거나 같으면 반복 종료
+    Data delData = ph->heapArr[1];
+    Data lastElm = ph->heapArr[ph->numOfData];
+
+    int parentIDX = 1;
+    int childIDX;
+
+    //자식노드 둘중에 작은값
+    while(childIDX = GetHiPriChildIDX(ph, parentIDX)) {
+
+        //lastElm이 자식노드보다 작거나 같으면 반복문 종료
+        if(ph->comp(lastElm, ph->heapArr[childIDX])>=0)
+            break;
+
+        ph->heapArr[parentIDX] = ph->heapArr[childIDX];
+        parentIDX = childIDX;
+        
+    }
+
+    ph->heapArr[parentIDX] = lastElm;
+    (ph->numOfData)--;
+
+    return delData;
+}
+```
