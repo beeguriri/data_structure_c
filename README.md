@@ -182,3 +182,38 @@ pq->front = pq->front->next;
 //peek
 pq->front->data;
 ```
+- 이중연결리스트로 deque 구현
+```c
+typedef struct _node {
+    Data data;
+    struct _node *next;
+    struct _node *prev;
+} Node;
+
+typedef struct _dlDeque {
+    Node *head;
+    Node *tail;
+} DLDeque;
+
+//앞에 데이터 추가할 때
+newNode->prev = NULL;
+newNode->next = pdq->head;
+pdq->head->prev = newNode;
+pdq->head = newNode;
+
+//뒤에 데이터 추가할 때
+newNode->prev = pdq->tail;
+newNode->next = NULL;
+pdq->tail->next = newNode;
+pdq->tail = newNode;
+
+//앞에 데이터 삭제할 때
+Node *delNode = pdq->head;
+pdq->head = pdq->head->next;
+pdq->head->prev = NULL;
+
+//뒤에 데이터 삭제할 때
+Node *delNode = pdq->tail;
+pdq->tail = pdq->tail->prev;
+pdq->tail->next = NULL;
+```
