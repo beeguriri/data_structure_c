@@ -343,6 +343,7 @@ Data Delete(Heap *ph) {
 - 퀵정렬 : 피봇을 기준으로 원소가 1개 남을때 까지 분할정렬 반복
 
 ## DFS
+- 한 정점에 연결된 다음 정점, 다음 정점에 연결 된 다음 정점 순으로 방문
 ```c
 int VisitVertex(ALGraph *pg, int visitV) {
     if(pg->visitInfo[visitV] == 0) {
@@ -400,5 +401,39 @@ void DFSShowGraphVertexInfo(ALGraph *pg, int startV) {
 
     //방문 배열 초기화
     memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+}
+```
+
+## BFS
+- 한 정점에 연결된 여러개의 정점을 방문
+```c
+void BFSShowGraphVertexInfo(ALGraph *pg, int startV) {
+
+    Queue queue;
+    int visitV = startV;
+    int nextV;
+
+    QueueInit(&queue);
+    VisitVertex(pg, visitV);
+
+    while(LFirst(&(pg->adjList[visitV]), &nextV)) {
+
+        if(VisitVertex(pg, nextV))
+            Enqueue(&queue, nextV);
+        
+        //현재 정점에 연결 된 방문 가능한 리스트 모두 방문
+        while(LNext(&(pg->adjList[visitV]), &nextV))
+            if(VisitVertex(pg, nextV))
+                Enqueue(&queue, nextV);
+        
+        if(QIsEmpty(&queue))
+            break;
+        else
+            //방문 가능한 다음 정점부터 다시 순회
+            visitV = Dequeue(&queue);
+    }
+
+    memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+
 }
 ```
