@@ -342,3 +342,98 @@ Data Delete(Heap *ph) {
 - 병합정렬 : 원소가 1개 남을때 까지 분할 후 병합하며 정렬 반복
 - 퀵정렬 : 피봇을 기준으로 원소가 1개 남을때 까지 분할정렬 반복
 
+## DFS
+- 한 정점에 연결된 다음 정점, 다음 정점에 연결 된 다음 정점 순으로 방문
+```c
+int VisitVertex(ALGraph *pg, int visitV) {
+    if(pg->visitInfo[visitV] == 0) {
+        pg->visitInfo[visitV] = 1;  //방문 체크
+        printf("%c ", visitV+65);   //방문한 정점
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void DFSShowGraphVertexInfo(ALGraph *pg, int startV) {
+
+    Stack stack;
+    int visitV = startV;
+    int nextV;
+
+    //최초 방문점 스택에 넣고, 방문 정점 체크 해줌
+    StackInit(&stack);
+    VisitVertex(pg, visitV);
+    Push(&stack, visitV);
+
+    //현재 방문 정점에 연결 된 리스트의 첫번째 값을 다음정점으로 함
+    while(LFirst(&(pg->adjList[visitV]), &nextV)) {
+        
+        int visitFlag = FALSE;
+
+        //방문에 성공하면 stack에 push 후 
+        //최초 while문에서 다음정점에 연결 된 리스트 탐색
+        if(VisitVertex(pg, nextV)){
+            Push(&stack, visitV);
+            visitV = nextV;
+            visitFlag = TRUE;
+        } else {
+            //이미 방문한 지점이라면
+            //현재 방문 정점에 연결 된 리스트의 다음 값을 방문 정점으로 함
+            while(LNext(&(pg->adjList[visitV]), &nextV)) {
+                if(VisitVertex(pg, nextV)) {
+                    Push(&stack, visitV);
+                    visitV = nextV;
+                    visitFlag = TRUE;
+                    break;
+                }
+            }
+        }
+
+        //현재 방문 정점에 연결된 리스트 중 방문할 수 있는 정점이 없을 때
+        //길을 되돌아가야함 (visitV 재설정)
+        if(!visitFlag) {
+            if(IsEmpty(&stack))
+                break;
+            else
+                visitV = Pop(&stack);
+        }
+    }
+
+    //방문 배열 초기화
+    memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+}
+```
+
+## BFS
+- 한 정점에 연결된 여러개의 정점을 방문
+```c
+void BFSShowGraphVertexInfo(ALGraph *pg, int startV) {
+
+    Queue queue;
+    int visitV = startV;
+    int nextV;
+
+    QueueInit(&queue);
+    VisitVertex(pg, visitV);
+
+    while(LFirst(&(pg->adjList[visitV]), &nextV)) {
+
+        if(VisitVertex(pg, nextV))
+            Enqueue(&queue, nextV);
+        
+        //현재 정점에 연결 된 방문 가능한 리스트 모두 방문
+        while(LNext(&(pg->adjList[visitV]), &nextV))
+            if(VisitVertex(pg, nextV))
+                Enqueue(&queue, nextV);
+        
+        if(QIsEmpty(&queue))
+            break;
+        else
+            //방문 가능한 다음 정점부터 다시 순회
+            visitV = Dequeue(&queue);
+    }
+
+    memset(pg->visitInfo, 0, sizeof(int)*pg->numV);
+
+}
+```
